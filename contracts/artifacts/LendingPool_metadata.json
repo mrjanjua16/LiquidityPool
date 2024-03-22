@@ -151,6 +151,30 @@
 						"type": "address"
 					},
 					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"name": "calculateAccruedInterest",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "totalSupply",
 						"type": "uint256"
@@ -170,6 +194,30 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "repayAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "accruedInterest",
+						"type": "uint256"
+					}
+				],
+				"name": "calculateRepayableCollateral",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -337,7 +385,7 @@
 				],
 				"name": "repay",
 				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -553,11 +601,11 @@
 			]
 		},
 		"contracts/LendingPool.sol": {
-			"keccak256": "0x68a2106c531f023206699bfcb34ad0502af6efd4b53d21283a8f46ee210fa503",
+			"keccak256": "0x91424e35f71687c9f75dfad5525c13b0c760576d0bb0e1729ddf6f25f547782a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://9adef689f4bd97badd3a2393264dfb9370aa699ff2037adb980507d6d6c97e0e",
-				"dweb:/ipfs/QmXtbVwbD6JUp86zDL1TJoaJhd8QyuvRB9yFdMKACJ1vN3"
+				"bzz-raw://54210cf1975ff48a8dd34a47eb17621df39738bf4a18187d14fd8fe81c9d4010",
+				"dweb:/ipfs/QmYWdkafHyQSUGK4XS4rPobcC4KfyVe1KBQxR9QRcpB2cs"
 			]
 		}
 	},

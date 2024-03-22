@@ -89,7 +89,7 @@ contract LendingPool is ReentrancyGuard
         emit Borrowed(msg.sender, token, amount, interestRate, block.timestamp);
     }
 
-    function repay(address token, uint256 amount) public nonReentrant
+    function repay(address token, uint256 amount) public payable nonReentrant
     {
         require(amount > 0, "Repayment amount must be greater than zero");
         
@@ -118,12 +118,42 @@ contract LendingPool is ReentrancyGuard
         // Interact with Escrow to release collateral
     }
 
+    // Function to calculate the interset
     function calculateAccruedInterest(address token, address user) public view returns (uint256) {
         BorrowInfo memory borrowInfo = borrowedToken[user][token];
         uint256 timeElapsed = block.timestamp - borrowInfo.startTime;  // Calculate time elapsed since borrow
-        uint256 interestAccrued = borrowInfo.amount * borrowInfo.interestRate * timeElapsed / INTEREST_ACCUMULATION_TIME;
+        uint256 interestAccrued = borrowInfo.amount * borrowInfo.interestRate * timeElapsed;
         return interestAccrued;
     }
+
+    // Function to calculate Repayable Collateral
+    function calculateRepayableCollateral(uint256 repayAmount, uint256 accruedInterest) public returns (uint256)
+    {
+        // Minimum required collateral based on borrow amount and over-collateralization ratio
+        uint256 minRequiredCollateral = repayAmount + accruedInterest/OVER_COLLATERALIZATION_RATIO();
+
+        // User's total deposited amount across all tokens
+        uint256 totalUserDeposits = 0;
+        for(uint256 i=0; i<supportedTokens.length; i++)
+        {
+            totalUserDeposits += userDeposits[supportedTokens[i]][msg.sender];
+        }
+
+        // Amount of collateral to be releaed (considering over-collateralization)
+        uint256 collateralToRelease = repayAmount + accruedInterest;
+
+        if(totalUserDeposits > minRequiredCollateral)
+        {
+            // Ensure enough collateral remains after release
+            collateralToRelease = Math.min()
+        }
+    }
+
+    function OVER_COLLATERALIZATION_RATIO() internal view returns(uint256)
+    {
+        return 2;
+    }
+
 
 
     // Deposit Collateral
@@ -131,10 +161,10 @@ contract LendingPool is ReentrancyGuard
 
     function isSufficientCollateral(address user, address token, uint256 borrowAmount) public view returns(bool)
     {
-        uint256 totalUserDeposists = 0;
+        uint256 totalUserDeposits = 0;
         for(uint256 i=0; i<supportedTokens.length; i++)
         {
-            totalUserDeposists += userDeposits[supportedTokens[i]][user];
+            totalUserDeposits += userDeposits[supportedTokens[i]][user];
         }
     
 
