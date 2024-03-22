@@ -4,7 +4,107 @@
 	},
 	"language": "Solidity",
 	"output": {
-		"abi": [],
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "collateral",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "borrower",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "depositCollateral",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrowAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "isSufficientCollateral",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "borrower",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "withdrawCollateral",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
 		"devdoc": {
 			"kind": "dev",
 			"methods": {},
@@ -73,11 +173,11 @@
 			]
 		},
 		"contracts/Escrow.sol": {
-			"keccak256": "0xea8e892251aac264c4efda6621fcea3704f0784ed90a594ec216a2385f1067cb",
+			"keccak256": "0xa29e2b12d6a8f468ac1016b16ddfc09da9fa1e30e472caedd1e4009b6b79cc74",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3917e4a94a13993675200689c788d21911039a92e469c5c192447998f803b6e5",
-				"dweb:/ipfs/QmPM5c1jtCbHe8itTAp6LjLoNwhAQ5rMXfqGw9QyBNnw6y"
+				"bzz-raw://1feae7a88afac57a0e2da51ee7efcc6f771288b1419ad2f85338cf83bbe2e74f",
+				"dweb:/ipfs/QmTh9nAptUmxaVvneizFrShniNwM4UWuAnMurqbkSbb7tk"
 			]
 		}
 	},
