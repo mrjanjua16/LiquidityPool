@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./Escrow.sol";
+import "@openzeppelin/contracts/utils/math/Math.sol";
 
 contract LendingPool is ReentrancyGuard
 {
@@ -127,7 +128,7 @@ contract LendingPool is ReentrancyGuard
     }
 
     // Function to calculate Repayable Collateral
-    function calculateRepayableCollateral(uint256 repayAmount, uint256 accruedInterest) public returns (uint256)
+    function calculateRepayableCollateral(uint256 repayAmount, uint256 accruedInterest) public view returns (uint256)
     {
         // Minimum required collateral based on borrow amount and over-collateralization ratio
         uint256 minRequiredCollateral = repayAmount + accruedInterest/OVER_COLLATERALIZATION_RATIO();
@@ -145,19 +146,22 @@ contract LendingPool is ReentrancyGuard
         if(totalUserDeposits > minRequiredCollateral)
         {
             // Ensure enough collateral remains after release
-            collateralToRelease = Math.min()
+            collateralToRelease = Math.min(collateralToRelease, totalUserDeposits - minRequiredCollateral);
         }
+
+        return collateralToRelease;
     }
 
-    function OVER_COLLATERALIZATION_RATIO() internal view returns(uint256)
+    function OVER_COLLATERALIZATION_RATIO() internal pure returns(uint256)
     {
         return 2;
     }
 
-
-
     // Deposit Collateral
-    function depositCollateral(address token, address borrower, uint256 amount) public{}
+    function depositCollateral(address token, address borrower, uint256 amount) public
+    {
+        collateral[token][borrow] += amount;
+    }
 
     function isSufficientCollateral(address user, address token, uint256 borrowAmount) public view returns(bool)
     {
@@ -166,24 +170,22 @@ contract LendingPool is ReentrancyGuard
         {
             totalUserDeposits += userDeposits[supportedTokens[i]][user];
         }
-    
-
+        return totalUserCollateral >= requiredCollateral;
     }
 
     function calculateRequiredCollateral(uint256 borrowAmount) public pure returns(uint256)
     {
-    // Implement logic to calculate minimum required collateral based on over-collateralization ratio (e.g., borrow amount * OVER_COLLATERALIZATION_RATIO)
-
-
+        return borrowAmount * OVER_COLLATERALIZATION_RATIO();
     }
 
     // Withdraw Collateral
-    function withdrawCollateral(address token, address borrower, uint256 amount) public {}
+    function withdrawCollateral(address token, address borrower, uint256 amount) public
+    {
+        // check if user has enough collateral available for withdrawal
+        require(collateral[token][borrower] >= amount, "Insufficient collateral to withdraw");
+        collateral[token][borrower] -= amount;
+    }
 
-    function calculateInterestRate(address token, uint256 totalSupply, uint256 totalBorrows) public view returns (uint256) {
-    // ... (Logic to define interest rate calculation based on supply and demand or other factors)
-  }
-
-
-
+    function calculateInterestRate(address token, uint256 totalSupply, uint256 totalBorrows) public view returns (uint256)
+    {}
 }
