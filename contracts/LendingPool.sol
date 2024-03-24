@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "./Escrow.sol";
+//import "./Escrow.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
 contract LendingPool is ReentrancyGuard
@@ -38,19 +38,16 @@ contract LendingPool is ReentrancyGuard
     mapping(address => mapping(address => BorrowInfo)) public borrowedToken;
 
     // References to other contracts - instances
-    Escrow public escrow;
     
-    constructor(Escrow _escrow)
-    {
-        escrow = _escrow;
-    }
+    constructor()
+    {}
 
     event DepositMade(address indexed token, address indexed user, uint256 amount);
     event Borrowed(address indexed user, address indexed token, uint256 amount, uint256 interestRate, uint256 startTime);
 
 
     // Function to deposit funds into the lending pool
-    function deposit(address token, uint256 amount) public
+    function deposit(address token, uint256 amount) public payable 
     {
         require(amount > 0, "Deposit amount must be greater than zero");
         // Transfers token from user to contract
@@ -66,7 +63,7 @@ contract LendingPool is ReentrancyGuard
     }   
 
     // Function with Access control and security
-    function borrow(address token, uint256 amount) public nonReentrant
+    function borrow(address token, uint256 amount) public payable nonReentrant
     {
         require(amount > 0, "Borrow amount must be greater than zero");
         require(isSufficientCollateral(msg.sender, token, amount), "Insufficient collateral");
@@ -160,7 +157,7 @@ contract LendingPool is ReentrancyGuard
     // Deposit Collateral
     function depositCollateral(address token, address borrower, uint256 amount) public
     {
-        collateral[token][borrow] += amount;
+        collateral[token][borrower] += amount;
     }
 
     function isSufficientCollateral(address user, address token, uint256 borrowAmount) public view returns(bool)
@@ -170,7 +167,8 @@ contract LendingPool is ReentrancyGuard
         {
             totalUserDeposits += userDeposits[supportedTokens[i]][user];
         }
-        return totalUserCollateral >= requiredCollateral;
+        uint256 requiredCollateral = calculateRequiredCollateral(borrowAmount);
+        return totalUserDeposits >= requiredCollateral;
     }
 
     function calculateRequiredCollateral(uint256 borrowAmount) public pure returns(uint256)
